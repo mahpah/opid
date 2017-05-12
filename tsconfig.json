@@ -1,0 +1,39 @@
+{
+	"compilerOptions": {
+		"target": "es2015",
+		"module": "commonjs",
+		"experimentalDecorators": true,
+		"outDir": "build/main",
+		"rootDir": "src",
+		"moduleResolution": "node",
+		"declaration": true,
+		"inlineSourceMap": true,
+		"listFiles": false,
+		"traceResolution": false,
+		"pretty": true,
+		"strictNullChecks": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": true,
+		"noImplicitAny": false,
+		"noImplicitReturns": true,
+		"noImplicitThis": false,
+		"noUnusedLocals": true,
+		"noUnusedParameters": true,
+		"noEmitHelpers": false,
+		"lib": [
+			"es6",
+			"dom"
+		],
+		"typeRoots": [
+			"@types",
+			"node_modules/@types"
+		]
+	},
+	"include": [
+		"src/**/*.ts"
+	],
+	"exclude": [
+		"node_modules/**"
+	],
+	"compileOnSave": false
+}
