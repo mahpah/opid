@@ -15,9 +15,9 @@ import { Config } from './config'
 
 const ClientId = 'dgm_1111'
 const ClientSecret = 'verysecret'
-const AuthorizeUrl = `${Config.idServer}:${Config.idServerPort}/v1/authorize`
-const TokenUrl = `${Config.idServer}:${Config.idServerPort}/v1/token`
-const AuthorizeRedirectUri = `${Config.applicationServer}:${Config.applicationServerPort}/openid/callback`
+const AuthorizeUrl = `${Config.idServer}/v1/authorize`
+const TokenUrl = `${Config.idServer}/v1/token`
+const AuthorizeRedirectUri = `${Config.applicationServer}/openid/callback`
 
 const app = new Koa()
 const router = new KoaRouter()
