@@ -1,25 +1,40 @@
+/**
+ * RELYING PARTY or CLIENT
+ * This application rely on identity provided by OpenID server. That why it's called so
+ */
+
 import * as Koa from 'koa'
 import { Context } from 'koa'
 import * as KoaRouter from 'koa-router'
 import * as logger from 'koa-logger'
 import * as superagent from 'superagent'
+import { render } from './utils'
+import * as atob from 'atob'
+import * as assert  from 'assert'
 
 const ClientId = 'dgm_1111'
-// const ClientSecret = 'verysecret'
+const ClientSecret = 'verysecret'
 const AuthorizeUrl = 'http://localhost:3030/v1/authorize'
 const AuthorizeRedirectUri = 'http://localhost:3000/openid/callback'
 
 const app = new Koa()
 const router = new KoaRouter()
 
+/**
+ * take user to login page provided by open id provider
+ */
 router.get('/openid/login', async (ctx: Context) => {
-	const location = `${AuthorizeUrl}?response_type=code&client_id=${ClientId}&redirect_uri=${AuthorizeRedirectUri}&scope=profile`
+	const scopes = encodeURIComponent(['openid', 'profile', 'email'].join(' '))
+	const location =
+		`${AuthorizeUrl}?response_type=code&client_id=${ClientId}&redirect_uri=${AuthorizeRedirectUri}&scope=${scopes}`
 	ctx.redirect(location)
 })
 
+/**
+ * after user authenticate and authorize in openid page, it (openid server) will send them back here
+ */
 router.get('/openid/callback', async (ctx: Context) => {
 	const { code, nonce } = ctx.request.query
-	console.log(code, nonce)
 
 	try {
 		const tokenResponse = await superagent.post('http://localhost:3030/v1/token')
@@ -30,12 +45,38 @@ router.get('/openid/callback', async (ctx: Context) => {
 				redirect_uri: AuthorizeRedirectUri,
 				nonce,
 			})
-		ctx.body = {
-			tokenResponse: tokenResponse.body,
+
+		ctx.status = tokenResponse.status
+
+		if (tokenResponse.status !== 200) {
+			ctx.body = {
+				tokenResponse: tokenResponse.body,
+			}
+			return
 		}
+
+		/**
+		 * Relying party could decrypt token to verify it
+		 * @see http://openid.net/specs/openid-connect-core-1_0.html#TokenResponseValidation
+		 */
+		const idToken = tokenResponse.body.id_token
+		const plain = atob(idToken).replace(ClientSecret, '')
+		const claim = JSON.parse(plain)
+		assert(claim, 'claim must be defined')
+		assert(claim.aud === ClientId, 'claim must belong to us')
+		// render some welcome page, if you want
+		ctx.body = render('template/callback-page.html', {
+			username: claim.sub
+		})
+
 	} catch (e) {
-		ctx.body = e
+		console.log(e)
+		ctx.throw(401, e.response)
 	}
+})
+
+router.get('*', async ctx => {
+	ctx.body = render('template/application.html', {})
 })
 
 app.use(async (ctx: Context, next: Function) => {

@@ -3,7 +3,7 @@
 		"target": "es2015",
 		"module": "commonjs",
 		"experimentalDecorators": true,
-		"outDir": "build/main",
+		"outDir": "build",
 		"rootDir": "src",
 		"moduleResolution": "node",
 		"declaration": true,

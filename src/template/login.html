@@ -5,20 +5,79 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<title>Login</title>
+	<style>
+		body {
+			font-family: sans-serif;
+			background: hotpink;
+			color: #333;
+		}
+
+		h1 {
+			margin: 20px auto;
+			text-align: center;
+		}
+
+		form {
+			padding: 30px;
+			background: #fff;
+			display: block;
+			margin: auto;
+			width: 300px;
+			box-shadow: 0 1px 25px 0 rgba(0, 0, 0, 0.1);
+		}
+		.form-input {
+			margin-bottom: 20px;
+		}
+
+		.form-input input {
+			display: block;
+			width: 100%;
+			padding: 5px;
+			border: 1px solid #ccc;
+		}
+
+		.scopes {
+			color: #555;
+		}
+
+		.form-footer {
+			margin-top: 20px;
+			text-align: center;
+		}
+
+		.form-footer button {
+			border: 1px solid #ddd;
+			background: rebeccapurple;
+			color: white;
+			font-weight: bold;
+			padding: 5px 10px;
+			border-radius: 2px;
+		}
+
+		.client-name {
+			font-weight: bold;
+		}
+	</style>
 </head>
 <body>
-	<h1><strong>OPENID</strong>provider</h1>
+	<h1><strong>OPID</strong> id provider</h1>
 	<form action="" method="post">
+		<input type="hidden" value="{{clientId}}" name="clientId">
 		<div class="form-input">
-			<label for="">name</label>
-			<input type="text" name="username">
+			<input type="text" name="username" placeholder="name" required>
 		</div>
 		<div class="form-input">
-			<label for="">password</label>
-			<input type="password" name="password">
+			<input type="password" name="password" placeholder="password" required>
 		</div>
-		<button>Login</button>
-	</form>
 
+		<div class="scopes">
+			By click login, you approve <span class="client-name">{{clientName}}</span> to perform:
+			<ul>{{scopes}}</ul>
+		</div>
+
+		<div class="form-footer">
+			<button>Login</button>
+		</div>
+	</form>
 </body>
 </html>
