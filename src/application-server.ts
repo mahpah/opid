@@ -11,11 +11,13 @@ import * as superagent from 'superagent'
 import { render } from './utils'
 import * as atob from 'atob'
 import * as assert  from 'assert'
+import { Config } from './config'
 
 const ClientId = 'dgm_1111'
 const ClientSecret = 'verysecret'
-const AuthorizeUrl = 'http://localhost:3030/v1/authorize'
-const AuthorizeRedirectUri = 'http://localhost:3000/openid/callback'
+const AuthorizeUrl = `${Config.idServer}:${Config.idServerPort}/v1/authorize`
+const TokenUrl = `${Config.idServer}:${Config.idServerPort}/v1/token`
+const AuthorizeRedirectUri = `${Config.applicationServer}:${Config.applicationServerPort}/openid/callback`
 
 const app = new Koa()
 const router = new KoaRouter()
@@ -37,7 +39,7 @@ router.get('/openid/callback', async (ctx: Context) => {
 	const { code, nonce } = ctx.request.query
 
 	try {
-		const tokenResponse = await superagent.post('http://localhost:3030/v1/token')
+		const tokenResponse = await superagent.post(TokenUrl)
 			.set('Content-type', 'application/json') // should be form url encoded
 			.send({
 				grant_type: 'authorization_code',
@@ -90,6 +92,6 @@ app.use(logger())
 app.use(router.routes())
 app.use(router.allowedMethods())
 
-app.listen(3000, () => {
-	console.log('Application server listening on port 3000')
+app.listen(Config.applicationServerPort, () => {
+	console.log('Application server listening on port ' + Config.applicationServerPort)
 })

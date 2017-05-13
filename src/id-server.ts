@@ -6,6 +6,7 @@ import * as bodyparser from 'koa-bodyparser'
 import * as logger from 'koa-logger'
 import * as btoa from 'btoa'
 import { render } from './utils'
+import { Config } from './config'
 
 const RegisteredClients = [{
 	clientName: 'DigiMed',
@@ -146,8 +147,8 @@ app.use(logger())
 app.use(router.routes())
 app.use(router.allowedMethods())
 
-app.listen(3030, () => {
-	console.log('Id server listening on port 3030')
+app.listen(Config.idServerPort, () => {
+	console.log('Id server listening on port ' + Config.idServerPort)
 })
 
 /* Utilities */
