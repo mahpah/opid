@@ -78,7 +78,7 @@ router.get('/openid/callback', async (ctx: Context) => {
 })
 
 router.get('*', async ctx => {
-	ctx.body = render('template/application.html', {})
+	ctx.body = render('template/application.html', { idServer: Config.idServer })
 })
 
 app.use(async (ctx: Context, next: Function) => {
